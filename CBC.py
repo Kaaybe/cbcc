@@ -1,8 +1,9 @@
 import time
 from datetime import datetime
 import json
-!pip install streamlit
 import streamlit as st
+import requests # Added this import to the top of the file
+
 # --- 1. SET PAGE CONFIGURATION ---
 st.set_page_config(
     page_title="CBC AI Tutor",
@@ -125,13 +126,12 @@ SUBJECT_KNOWLEDGE = {
 }
 
 # --- 5. AI HELPER FUNCTION ---
-async def call_claude_api(messages, system_prompt):
+# Changed to a synchronous function and moved 'requests' import to the top
+def call_claude_api(messages, system_prompt):
     """
     Calls Claude API to generate intelligent responses.
     """
     try:
-        import requests
-
         # Prepare the API call
         response = requests.post(
             "https://api.anthropic.com/v1/messages",
@@ -395,13 +395,11 @@ if prompt := st.chat_input(f"Ask me anything about {st.session_state.current_sub
 
         # Simulate API call (you'll need to implement actual API integration)
         try:
-            # For now, using a placeholder response
             # In production, uncomment the API call below
-
-            # response = await call_claude_api(api_messages, system_prompt)
-
+            # response = call_claude_api(api_messages, system_prompt) # No 'await' needed now
+            
             # PLACEHOLDER RESPONSE (remove this in production)
-            response = f"""I understand you're asking about: "{prompt}"\n\nFor {st.session_state.current_grade} {st.session_state.current_subject}, let me help you.\n\n**Note:** This is a demo version. To activate full AI capabilities:\n\n1. Add your Anthropic API key\n2. Uncomment the API call in the code\n3. Install required packages: `pip install anthropic requests`\n\n**What I can do when fully activated:**\n- Generate custom worksheets with questions\n- Create detailed lesson plans\n- Explain concepts step-by-step\n- Provide practice problems with solutions\n- Make assessments with marking schemes\n- Help with homework\n- Create study materials\n\n**For now, try the example prompts in the sidebar!**\n\nWould you like me to create a specific type of material? I can generate:\n- 📝 Worksheets\n- 📋 Lesson Plans\n- ✅ Quizzes/Tests\n- 🎴 Flashcards\n- 💡 Explanations\n"""
+            response = f"""I understand you're asking about: "{prompt}"\n\nFor {st.session_state.current_grade} {st.session_state.current_subject}, let me help you.\n\n**Note:** This is a demo version. To activate full AI capabilities:\n\n1. Add your Anthropic API key\n2. Uncomment the API call in the code\n3. Ensure you have a `requirements.txt` file with `streamlit`, `requests`, and `anthropic` (if using the Anthropic SDK).\n\n**What I can do when fully activated:**\n- Generate custom worksheets with questions\n- Create detailed lesson plans\n- Explain concepts step-by-step\n- Provide practice problems with solutions\n- Make assessments with marking schemes\n- Help with homework\n- Create study materials\n\n**For now, try the example prompts in the sidebar!**\n\nWould you like me to create a specific type of material? I can generate:\n- 📝 Worksheets\n- 📋 Lesson Plans\n- ✅ Quizzes/Tests\n- 🎴 Flashcards\n- 💡 Explanations\n"""
 
             # Display response with typing effect
             full_response = ""
